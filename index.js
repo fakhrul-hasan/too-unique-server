@@ -43,6 +43,18 @@ async function run() {
       const result = await toysCollection.estimatedDocumentCount();
       res.send({totalToys: result});
     })
+    app.get('/toys/:text', async(req,res)=>{
+      if(req.params.text == 0){
+        const result = await toysCollection.find({subCategoryName: 'Electronics'}).toArray();
+        return res.send(result);
+      }else if(req.params.text == 1){
+        const result = await toysCollection.find({subCategoryName: 'Remote Control Vehicle'}).toArray();
+        return res.send(result);
+      }else if(req.params.text == 2){
+        const result = await toysCollection.find({subCategoryName: 'Monster Trucks'}).toArray();
+        return res.send(result);
+      }
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
