@@ -35,11 +35,12 @@ async function run() {
       const limit = parseInt(req.query.limit) || 20;
       const skip = page * limit;
       let query = {};
-      console.log(req.query.email);
+      let sortOrder = 'asc'
       if (req.query?.email) {
         query = { sellerEmail: req.query.email };
+        sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
       }
-      const cursor = toysCollection.find(query).skip(skip).limit(limit);
+      const cursor = toysCollection.find(query).skip(skip).limit(limit).sort({price: sortOrder});
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -84,7 +85,7 @@ async function run() {
           sellerName: updatedToy.sellerName,
           sellerEmail: updatedToy.sellerEmail,
           subCategoryName: updatedToy.subCategoryName,
-          price: updatedToy.price,
+          price: parseInt(updatedToy.price),
           rating: updatedToy.rating,
           qty: updatedToy.qty,
           detail: updatedToy.detail,
