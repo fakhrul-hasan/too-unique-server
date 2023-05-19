@@ -32,9 +32,16 @@ async function run() {
         res.send(result);
     })
     app.get('/allToys', async(req,res)=>{
-      const cursor = toysCollection.find()
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = page * limit;
+      const cursor = toysCollection.find().skip(skip).limit(limit);
       const result = await cursor.toArray();
       res.send(result);
+    })
+    app.get('/totalToys', async(req,res)=>{
+      const result = await toysCollection.estimatedDocumentCount();
+      res.send({totalToys: result});
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
