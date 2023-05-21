@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const toysCollection = client.db("tooUniqueDB").collection("toys");
 
     app.post("/addToy", async (req, res) => {
@@ -44,6 +44,11 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.get('/allToys/:search', async(req,res)=>{
+      const searchText = req.params.search;
+      const results = await toysCollection.find({name: {$regex: searchText, $options: 'i'}}).toArray();
+      res.send(results);
+    })
     app.get("/totalToys", async (req, res) => {
       const result = await toysCollection.estimatedDocumentCount();
       res.send({ totalToys: result });

@@ -5,6 +5,16 @@
        { "src": "index.js", "use": "@vercel/node" }
     ],
     "routes": [
-       { "src": "/(.*)", "dest": "index.js", "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"] }
+      {
+        "src": "/api/.*",
+        "dest": "index.js",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://localhost:5173"
+        }
+      },
+      {
+        "src": "/(.*)",
+        "dest": "index.js"
+      }
     ]
  }
